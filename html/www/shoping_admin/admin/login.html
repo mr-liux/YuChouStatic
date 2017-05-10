@@ -6,15 +6,16 @@
 <link rel="shortcut icon" href="favicon.ico" />
 
 <title>商城管理系统</title>
-    <link href="../asset/themes/insdep/easyui.css" rel="stylesheet" type="text/css"/>
-    <link href="../asset/themes/insdep/easyui_animation.css" rel="stylesheet" type="text/css"/>
-    <link href="../asset/themes/insdep/easyui_plus.css" rel="stylesheet" type="text/css"/>
-    <link href="../asset/themes/insdep/insdep_theme_default.css" rel="stylesheet" type="text/css"/>
-    <link href="../asset/themes/insdep/icon.css" rel="stylesheet" type="text/css"/>
-    <link href="../asset/plugin/font-awesome-4.7.0/css/font-awesome.min.css" rel="stylesheet" type="text/css"/>
-    <script type="text/javascript" src="../asset/js/jquery.min.js"></script>
-    <script type="text/javascript" src="../asset/js/jquery.easyui.min.js"></script>
-    <script type="text/javascript" src="../asset/themes/insdep/jquery.insdep-extend.min.js"></script>
+    <link href="../assets/themes/insdep/easyui.css" rel="stylesheet" type="text/css"/>
+    <link href="../assets/themes/insdep/easyui_animation.css" rel="stylesheet" type="text/css"/>
+    <link href="../assets/themes/insdep/easyui_plus.css" rel="stylesheet" type="text/css"/>
+    <link href="../assets/themes/insdep/insdep_theme_default.css" rel="stylesheet" type="text/css"/>
+    <link href="../assets/themes/insdep/icon.css" rel="stylesheet" type="text/css"/>
+    <link href="../assets/plugin/font-awesome-4.7.0/css/font-awesome.min.css" rel="stylesheet" type="text/css"/>
+    <script type="text/javascript" src="../assets/plugin/common/jquery.min.js"></script>
+    <script type="text/javascript" src="../assets/plugin/common/jquery.easyui.min.js"></script>
+    <script type="text/javascript" src="../assets/themes/insdep/jquery.insdep-extend.min.js"></script>
+    <script type="text/javascript" src="../assets/js/Tools.js"></script>
 </head>
 
 <body class="theme-login-layout">
@@ -29,12 +30,12 @@
 					<b>APP扫码登录</b>
 					<span>请使用最新版APP进行扫码登录</span>
 				</div>
-				<div class="QRcode-content"><img src="../asset/img/admin/QRcode-demo.png" width="215"></div>
+				<div class="QRcode-content"><img src="../assets/img/admin/QRcode-demo.png" width="215"></div>
 			</div>
 
             <form id="form" class="theme-login-form" method="post" enctype="application/json;charset=UTF-8">
             <dl>
-                <dt><img src="../asset/img/admin/logo_110.png"></dt>
+                <dt><img src="../assets/img/admin/logo_110.png"></dt>
 
                         <dd><input id="username" name="userCode" value="yicj" class="theme-login-text"  style="width:100%;"/></dd>
                         <dd><input id="password" name="password" value="123456" class="theme-login-text"  style="width:100%;"/></dd>
@@ -53,8 +54,7 @@
         </div>
 
     <script>
-        var basepath="/yuchou-admin/";
-    	$(function(){		
+    	$(function(){
 
     		$(".QRcode").on("click",function(){
     			$(".QRcode-layout").removeClass("hide");
@@ -100,7 +100,7 @@
 			/*验证码tooltip*/
             $('.submit').click(function () {
                 $.ajax({
-                    url:basepath+"admin/login",
+                    url:Tools.baseAdminPath+"/admin/login",
                     type:"post",
 					dataType:"json",
                     contentType:"application/json",
