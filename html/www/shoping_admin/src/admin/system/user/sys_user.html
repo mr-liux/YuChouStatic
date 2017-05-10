@@ -1,75 +1,100 @@
-<table id="table" style="height:500px;" class="table-celled table-striped"
-       data-options="toolbar:'#tb'">
+<table id="table" style="" class="table-celled table-striped"
+       data-options="toolbar:'#tb',striped:true">
     <thead>
     <tr>
-        <th data-options="field:'ck',checkbox:true"></th>
-        <th data-options="field:'itemid',width:80,formatter:text">Item ID</th>
-        <th data-options="field:'productid',width:100">Product</th>
-        <th data-options="field:'listprice',width:80,formatter:listprice,align:'center'">List Price</th>
-        <th data-options="field:'unitcost',width:160,formatter:unitcost,align:'center'">Unit Cost</th>
-        <th data-options="field:'status',width:80,formatter:status,align:'center'">Attribute</th>
-        <th data-options="field:'attr1',width:120,align:'center'">Status</th>
-        <th data-options="field:'operate',align:'center',formatter:operate">Operate</th>
-        <th data-options="field:'button',width:120,align:'center',formatter:button">Button</th>
+        <th data-options="field:'',checkbox:true"></th>
+        <th data-options="field:'userKy',width:'35'">编号</th>
+        <th data-options="field:'userId',width:'60'">用户名</th>
+        <th data-options="field:'name',width:'70',align:'center'">姓名</th>
+        <th data-options="field:'companyName',width:'100',align:'center'">所属公司</th>
+        <th data-options="field:'orgName',width:'100',align:'center'">所属部门</th>
+        <th data-options="field:'jobName',width:'150',align:'center'">岗位</th>
+        <th data-options="field:'addTime',width:'130',align:'center'">创建时间</th>
+        <th data-options="field:'status',width:'60',align:'center',formatter:status">状态</th>
+        <th data-options="field:'button',width:'180',align:'left',formatter:button">操作</th>
     </tr>
     </thead>
 </table>
 <div id="tb" >
 
-    Date From: <input class="easyui-datebox" style="width:110px">
-    To: <input class="easyui-datebox" style="width:110px">
-    Language:
-    <select class="easyui-combobox" panelHeight="auto" style="width:100px">
-        <option value="java">Java</option>
-        <option value="c">C</option>
-        <option value="basic">Basic</option>
-        <option value="perl">Perl</option>
-        <option value="python">Python</option>
+    用户名: <input id="search_username" class="easyui-textbox" style="width:100px">
+    &nbsp;&nbsp;姓名: <input id="search_name" class="easyui-textbox" style="width:100px">
+    &nbsp;&nbsp;所属公司:
+    <select class="easyui-combobox" id="search_companyname" data-options="editable:false,valueField: 'companyKy',
+		textField:'name',panelHeight:'auto',loader:loadCompany" style="width:180px;">
+        <option value="-1">全部</option>
     </select>
-    <a href="#" class="easyui-linkbutton" iconCls="icon-search">Search</a>
+    &nbsp;&nbsp;状态:
+    <select class="easyui-combobox" id="search_status" data-options="editable:false,panelHeight:'auto'"  style="width:80px;">
+        <option value="-1">全部</option>
+        <option value="1">正常</option>
+        <option value="0">删除</option>
+    </select>
+    <a href="javaScript:void(0);" class="easyui-linkbutton" id="btn_search" iconCls="icon-search">查询</a>
 
     <div  style="float: right;">
-        <a href="#" class="easyui-linkbutton " iconCls="icon-add" plain="true">添加</a>
-        <a href="#" class="easyui-linkbutton " iconCls="icon-edit" plain="true">编辑</a>
-        <a href="#" class="easyui-linkbutton " iconCls="icon-save" plain="true">保存</a>
-        <a href="#" class="easyui-linkbutton " iconCls="icon-cut" plain="true">剪切</a>
-        <a href="#" class="easyui-linkbutton " iconCls="icon-remove" plain="true">删除</a>
+        <a href="javaScript:void(0);" class="easyui-linkbutton" id="btn_add" iconCls="icon-add" plain="false">添加</a>
+        <!--<a href="#" class="easyui-linkbutton " iconCls="icon-edit" plain="false">编辑</a>
+        <a href="#" class="easyui-linkbutton " iconCls="icon-save" plain="false">保存</a>
+        <a href="#" class="easyui-linkbutton " iconCls="icon-cut" plain="false">剪切</a>
+        <a href="#" class="easyui-linkbutton " iconCls="icon-remove" plain="false">删除</a>-->
     </div>
 </div>
 
-<script>
-    function listprice(value,row,index){
-        return "<span class='block-success span-badge'>"+value+"</span>";
-    }
-    function unitcost(value,row,index){
-        var progressbar;
-        if(value<10){
-            progressbar="<div class='progressbar progressbar-green' data-options='value:"+value+"'>"+value+"</div>";
-        }else if(value>10&&value<30){
-            progressbar="<div class='progressbar progressbar-blue' data-options='value:"+value+"'>"+value+"</div>";
-        }else if(value>30&&value<50){
-            progressbar="<div class='progressbar' data-options='value:"+value+"'>"+value+"</div>";
-        }else if(value>50&&value<80){
-            progressbar="<div class='progressbar progressbar-yellow' data-options='value:"+value+"'>"+value+"</div>";
+<script  type="text/javascript">
+
+    function button(value,row,index){
+        console.log(row.status);
+        if(row.status==1){
+            return "<a href='javascript:void(0);'  class='button-edit button-default'>编辑</a>    " +
+            "<a href='javascript:void(0);' class='button-delete button-danger'>删除</a> " +
+            "<a href='javascript:void(0);' class='button-right button-info'>设置权限</a>";
         }else{
-            progressbar="<div class='progressbar progressbar-red' data-options='value:"+value+"'>"+value+"</div>";
+            return "<a href='javascript:void(0);' class='button-recover button-success'>恢复</a>";
         }
 
-        return progressbar;
-    }
-    function operate(value,row,index){
-        return "<a href='javascript:void(0)' class='operate' data-options='value:"+value+",iconCls:\"icon-set\"'></a>";
     }
     function status(value,row,index){
-        return "<input class='switchbutton'>";
+        if(value==1){
+            return "<span class=\"icons icons-ok\"></span>正常";
+        }else{
+            return "<span class=\"icons icons-error\"></span><b>删除</b>";
+        }
     }
-    function button(value,row,index){
-        return "<a href='#' class='button-delete button-danger'>删除</a> <a href='#' class='button-edit button-default'>编辑</a>";
+
+    function loadCompany(param,success,error){
+        Tools.ajax({
+            type: 'get',
+            url: Tools.baseAdminPath+"/admin/system/company/list?pagesize=-1",
+            success: function (data) {
+                var tempData = [];
+                if(data&&data.success&&data.code==0){
+                    tempData=data.data;
+                }
+                tempData.splice(0,0,{"companyKy":"-1","name":"全部"});
+                success(tempData);
+            }
+        });
     }
-    function text(value,row,index){
-        return "<input class='text' value='"+value+"'>";
-    }
+
     $(function(){
+        $("#btn_add").click(function(){
+           Tools.href("admin_system_user_add");
+        });
+
+
+        $("#btn_search").click(function(){
+            var search_username = $("#search_username").val();
+            var search_name = $("#search_name").val();
+            var search_companyname = $("#search_companyname").combobox("getValue");
+            var search_status = $("#search_status").val();
+            $('#table').datagrid('load',{
+                name :search_name,
+                username :search_username,
+                status: (search_status ==-1?"":search_status),
+                companyname : (search_companyname==-1?"":search_companyname)
+            });
+        });
 
         $('#table').datagrid({
             cls:"theme-datagrid",
@@ -77,103 +102,49 @@
             singleSelect:true,
             width:'100%',
             //showFooter:true,
+            method:"get",
             cache:false,
             pagination:true,
             pageSize:10,
             //rownumbers:true,//显示序号
             collapsible:true,
-            data:{"total":"28","rows":[
-                {"itemid":"EST-1","productid":"FI-SW-01","listprice":"16.50","unitcost":"5.00","status":"P","attr1":"Large","operate":"1","button":"1"},
-                {"itemid":"EST-10","productid":"K9-DL-01","listprice":"18.50","unitcost":"17.00","status":"P","attr1":"Spotted Adult Female","operate":"10","button":"1"},
-                {"itemid":"EST-11","productid":"RP-SN-01","listprice":"18.50","unitcost":"55.00","status":"P","attr1":"Venomless","operate":"11","button":"1"},
-                {"itemid":"EST-12","productid":"RP-SN-01","listprice":"18.50","unitcost":"31.00","status":"P","attr1":"Rattleless","operate":"12","button":"1"},
-                {"itemid":"EST-13","productid":"RP-LI-02","listprice":"18.50","unitcost":"21.00","status":"P","attr1":"Green Adult","operate":"13","button":"1"},
-                {"itemid":"EST-14","productid":"FL-DSH-01","listprice":"58.50","unitcost":"68.00","status":"P","attr1":"Tailless","operate":"14","button":"1"},
-                {"itemid":"EST-15","productid":"FL-DSH-01","listprice":"23.50","unitcost":"66.00","status":"P","attr1":"With tail","operate":"15","button":"1"},
-                {"itemid":"EST-16","productid":"FL-DLH-02","listprice":"93.50","unitcost":"97.00","status":"P","attr1":"Adult Female","operate":"16","button":"1"},
-                {"itemid":"EST-17","productid":"FL-DLH-02","listprice":"93.50","unitcost":"48.00","status":"P","attr1":"Adult Male","operate":"17","button":"1"},
-                {"itemid":"EST-18","productid":"AV-CB-01","listprice":"193.50","unitcost":"92.00","status":"P","attr1":"Adult Male","operate":"18","button":"1"}
-            ]},
-            //url:'example/application/datagrid_data4.json',
-            onLoadSuccess:function(){
-                $('.operate').menubutton({
-                    plain:false,
-                    menu: '#operate_menu'
-                });
-                $('#operate_menu').menu({
-                    onClick:function(item){
+            url:Tools.baseAdminPath+'/admin/system/user/list',
+            loader:function(param,success,error){
+                var that = $(this);
+                var opts = that.datagrid("options");
+                if (!opts.url) {
+                    return false;
+                }
+                Tools.ajax({
+                    type: opts.method,
+                    url: opts.url+"?cpage="+param.page+
+                    "&pagesize="+param.rows+
+                    "&orderByClause=user_ky&sort=desc" +
+                    "&name="+(typeof param.name=='undefined'?"":param.name)+
+                    "&userId="+(typeof param.username=='undefined'?"":param.username)+
+                    "&companyKy="+(typeof param.companyname=='undefined'?"":param.companyname)+
+                    "&status="+(typeof param.status=='undefined'?"":param.status),
+                    success: function (data) {
+                        var temp = {};
+                        temp.rows=[];
+                        temp.total=0;
+                        if(data&&data.success&&data.code==0){
+                            temp.rows=data.data;
+                            temp.total=data.ext.pageInfo.totalCount;
 
-                        var a=$('.operate').menubutton("options");
-                        switch (item.name)
-                        {
-                            case "undo":
-                                alert("undo "+a.value);
-                                break;
-                            case "redo":
-                                alert("redo "+a.value);
-                                break;
-                            case "cut":
-                                alert("cut "+a.value);
-                                break;
-                            case "copy":
-                                alert("copy "+a.value);
-                                break;
-                            case "paste":
-                                alert("paste "+a.value);
-                                break;
-                            case "delete":
-                                alert("delete "+a.value);
-                                break;
                         }
+                        success(temp);
                     }
                 });
+            },
+            onLoadSuccess:function(){
+                $('.button-delete').linkbutton({});
+                $('.button-edit').linkbutton({});
+                $('.button-right').linkbutton({});
+                $('.button-recover').linkbutton({});
 
-                $('.progressbar').progressbar({});
-
-                $('.switchbutton').switchbutton({
-                    height:23
-                });
-
-                $('.button-delete').linkbutton({
-                });
-                $('.button-edit').linkbutton({
-                });
-
-                $('.text').textbox({
-                    width:70,
-                    height:30
-                })
-
-
-
-                $('.operate-append,.operate-edit,.operate-delete').linkbutton({});
-                $('.operate-append').on('click', function(){
-                    var a=$(this).linkbutton("options");
-                    alert("append "+a.value);
-                });
-                $('.operate-edit').on('click', function(){
-                    var a=$(this).linkbutton("options");
-                    alert("edit "+a.value);
-                });
-                $('.operate-delete').on('click', function(){
-                    var a=$(this).linkbutton("options");
-                    alert("delete "+a.value);
-                });
             }
         });
 
-
-
     })
 </script>
-<div id="operate_menu" style="width:150px;">
-    <div data-options="name:'undo'">Undo</div>
-    <div data-options="name:'redo'">Redo</div>
-    <div class="menu-sep"></div>
-    <div data-options="name:'cut'">Cut</div>
-    <div data-options="name:'copy'">Copy</div>
-    <div data-options="name:'paste'">Paste</div>
-    <div class="menu-sep"></div>
-    <div data-options="name:'delete'">Delete</div>
-    <div>Select All</div>
-</div>

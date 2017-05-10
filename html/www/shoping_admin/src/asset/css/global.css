@@ -5,6 +5,18 @@
     color: #878787;
 }
 
-.activeMenu{
-    background-color: #db2828;
+.icons{
+    width:16px;
+    height:16px;
+    margin:0 3px 0 0;
+    background-image:url(../themes/insdep/images/alert_icons.png);
+    background-repeat:no-repeat;
+    float:left;
+}
+
+.icons-ok{
+    background-position:0 0;
+}
+.icons-error{
+    background-position:-16px 0;
 }
