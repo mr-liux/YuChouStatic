@@ -1,9 +1,15 @@
 /**
  * Created by yicj on 2017/5/10.
  */
+//全局配置
+var Config = {
+    baseAdminPath:"/yuchou-admin",
+    pagesize:20,
+}
+
+//工具类
 var Tools =  {
     token:"",
-    baseAdminPath:"/yuchou-admin",
     setToken : function(token){
         this.token = token;
     },
@@ -74,8 +80,73 @@ var Tools =  {
             }
         });
     },
+    loadTable:function (options) {
+        $(options.id).datagrid({
+            cls:"theme-datagrid",
+            title:(typeof options.title=='undefined'?'':options.title),
+            singleSelect:true,
+            width:'100%',
+            //showFooter:true,
+            method:"get",
+            cache:false,
+            pagination:true,
+            pageSize:Config.pagesize,
+            //rownumbers:true,//显示序号
+            collapsible:true,
+            url:Config.baseAdminPath+(typeof options.url=='undefined'?'':options.url),
+            loader:function(param,success,error){
+                var that = $(this);
+                var opts = that.datagrid("options");
+                if (!opts.url) {
+                    return false;
+                }
+                var tempUrlParams = '?1=1';
+                //console.log(options.params);
+                //console.log(param);
+                if(typeof param != 'undefined'){
+                    $.each(param,function (key) {
+                        if(key=='page'){
+                            tempUrlParams+='&cpage='+(typeof param[key]=='undefined'?'':param[key]);
+                        }else if(key=='rows'){
+                            tempUrlParams+='&pagesize='+(typeof param[key]=='undefined'?'':param[key]);
+                        }else{
+                            tempUrlParams+='&'+key+'='+(typeof param[key]=='undefined'?'':param[key]);
+                        }
+                    });
+                }
+                if(typeof options.params != 'undefined'){
+                    $.each(options.params,function (key) {
+                        tempUrlParams+='&'+key+'='+(typeof options.params[key]=='undefined'?'':options.params[key]);
+                    })
+                }
+                Tools.ajax({
+                    type: opts.method,
+                    url: opts.url+tempUrlParams,
+                    success: function (data) {
+                        var temp = {};
+                        temp.rows=[];
+                        temp.total=0;
+                        if(data&&data.success&&data.code==0){
+                            temp.rows=data.data;
+                            temp.total=data.ext.pageInfo.totalCount;
+                        }
+                        success(temp);
+                        if(typeof options.success!='undefined'){
+                            options.success(data);
+                        }
+                    }
+                });
+            },
+            onLoadSuccess:(typeof options.onLoadSuccess=='undefined'?function(){}:options.onLoadSuccess)
+        });
+    },
     href:function(url){
         window.location.href="#?"+url;
+    },
+    back:function(id){
+        $(id).click(function(){
+            window.history.back();
+        });
     }
 
 }

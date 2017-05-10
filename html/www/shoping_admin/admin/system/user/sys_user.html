@@ -44,7 +44,6 @@
 <script  type="text/javascript">
 
     function button(value,row,index){
-        console.log(row.status);
         if(row.status==1){
             return "<a href='javascript:void(0);'  class='button-edit button-default'>编辑</a>    " +
             "<a href='javascript:void(0);' class='button-delete button-danger'>删除</a> " +
@@ -65,7 +64,7 @@
     function loadCompany(param,success,error){
         Tools.ajax({
             type: 'get',
-            url: Tools.baseAdminPath+"/admin/system/company/list?pagesize=-1",
+            url: Config.baseAdminPath+"/admin/system/company/list?pagesize=-1",
             success: function (data) {
                 var tempData = [];
                 if(data&&data.success&&data.code==0){
@@ -90,13 +89,32 @@
             var search_status = $("#search_status").val();
             $('#table').datagrid('load',{
                 name :search_name,
-                username :search_username,
+                userId :search_username,
                 status: (search_status ==-1?"":search_status),
-                companyname : (search_companyname==-1?"":search_companyname)
+                companyKy : (search_companyname==-1?"":search_companyname)
             });
         });
 
-        $('#table').datagrid({
+        Tools.loadTable({
+            id:'#table',
+            title:'用户信息列表',
+            url:'/admin/system/user/list',
+            params:{
+                "orderByClause":"user_ky",
+                "sort":"desc"
+            },
+            success:function(data){
+                //console.log(data);
+            },
+            onLoadSuccess:function () {
+                $('.button-delete').linkbutton({});
+                $('.button-edit').linkbutton({});
+                $('.button-right').linkbutton({});
+                $('.button-recover').linkbutton({});
+            }
+        });
+
+        /*$('#table').datagrid({
             cls:"theme-datagrid",
             title:"用户信息列表",
             singleSelect:true,
@@ -105,10 +123,10 @@
             method:"get",
             cache:false,
             pagination:true,
-            pageSize:10,
+            pageSize:Config.pagesize,
             //rownumbers:true,//显示序号
             collapsible:true,
-            url:Tools.baseAdminPath+'/admin/system/user/list',
+            url:Config.baseAdminPath+'/admin/system/user/list',
             loader:function(param,success,error){
                 var that = $(this);
                 var opts = that.datagrid("options");
@@ -144,7 +162,7 @@
                 $('.button-recover').linkbutton({});
 
             }
-        });
+        });*/
 
     })
 </script>

@@ -41,7 +41,7 @@ $(function(){
         loadRight:function(){
             var indexObj = this;
             Tools.ajax({
-                url:Tools.baseAdminPath+"/admin/system/right/myMenu",
+                url:Config.baseAdminPath+"/admin/system/right/myMenu",
                 type:"get",
                 success:function(data){
                    var jsonData = data.data;

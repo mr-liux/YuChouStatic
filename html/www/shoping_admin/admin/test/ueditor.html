@@ -24,7 +24,7 @@
                     // 开始上传文件时显示一个图片
                     $("#wait_loading").show();
                     $.ajaxFileUpload({
-                        url:Tools.baseAdminPath+"/upload/image/goods",
+                        url:Config.baseAdminPath+"/upload/image/goods",
                         secureuri:false,
                         fileElementId:"fieldname",
                         dataType: "json",
