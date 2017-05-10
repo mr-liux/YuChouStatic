@@ -1,0 +1,179 @@
+<table id="table" style="height:500px;" class="table-celled table-striped"
+       data-options="toolbar:'#tb'">
+    <thead>
+    <tr>
+        <th data-options="field:'ck',checkbox:true"></th>
+        <th data-options="field:'itemid',width:80,formatter:text">Item ID</th>
+        <th data-options="field:'productid',width:100">Product</th>
+        <th data-options="field:'listprice',width:80,formatter:listprice,align:'center'">List Price</th>
+        <th data-options="field:'unitcost',width:160,formatter:unitcost,align:'center'">Unit Cost</th>
+        <th data-options="field:'status',width:80,formatter:status,align:'center'">Attribute</th>
+        <th data-options="field:'attr1',width:120,align:'center'">Status</th>
+        <th data-options="field:'operate',align:'center',formatter:operate">Operate</th>
+        <th data-options="field:'button',width:120,align:'center',formatter:button">Button</th>
+    </tr>
+    </thead>
+</table>
+<div id="tb" >
+
+    Date From: <input class="easyui-datebox" style="width:110px">
+    To: <input class="easyui-datebox" style="width:110px">
+    Language:
+    <select class="easyui-combobox" panelHeight="auto" style="width:100px">
+        <option value="java">Java</option>
+        <option value="c">C</option>
+        <option value="basic">Basic</option>
+        <option value="perl">Perl</option>
+        <option value="python">Python</option>
+    </select>
+    <a href="#" class="easyui-linkbutton" iconCls="icon-search">Search</a>
+
+    <div  style="float: right;">
+        <a href="#" class="easyui-linkbutton " iconCls="icon-add" plain="true">添加</a>
+        <a href="#" class="easyui-linkbutton " iconCls="icon-edit" plain="true">编辑</a>
+        <a href="#" class="easyui-linkbutton " iconCls="icon-save" plain="true">保存</a>
+        <a href="#" class="easyui-linkbutton " iconCls="icon-cut" plain="true">剪切</a>
+        <a href="#" class="easyui-linkbutton " iconCls="icon-remove" plain="true">删除</a>
+    </div>
+</div>
+
+<script>
+    function listprice(value,row,index){
+        return "<span class='block-success span-badge'>"+value+"</span>";
+    }
+    function unitcost(value,row,index){
+        var progressbar;
+        if(value<10){
+            progressbar="<div class='progressbar progressbar-green' data-options='value:"+value+"'>"+value+"</div>";
+        }else if(value>10&&value<30){
+            progressbar="<div class='progressbar progressbar-blue' data-options='value:"+value+"'>"+value+"</div>";
+        }else if(value>30&&value<50){
+            progressbar="<div class='progressbar' data-options='value:"+value+"'>"+value+"</div>";
+        }else if(value>50&&value<80){
+            progressbar="<div class='progressbar progressbar-yellow' data-options='value:"+value+"'>"+value+"</div>";
+        }else{
+            progressbar="<div class='progressbar progressbar-red' data-options='value:"+value+"'>"+value+"</div>";
+        }
+
+        return progressbar;
+    }
+    function operate(value,row,index){
+        return "<a href='javascript:void(0)' class='operate' data-options='value:"+value+",iconCls:\"icon-set\"'></a>";
+    }
+    function status(value,row,index){
+        return "<input class='switchbutton'>";
+    }
+    function button(value,row,index){
+        return "<a href='#' class='button-delete button-danger'>删除</a> <a href='#' class='button-edit button-default'>编辑</a>";
+    }
+    function text(value,row,index){
+        return "<input class='text' value='"+value+"'>";
+    }
+    $(function(){
+
+        $('#table').datagrid({
+            cls:"theme-datagrid",
+            title:"用户信息列表",
+            singleSelect:true,
+            width:'100%',
+            //showFooter:true,
+            cache:false,
+            pagination:true,
+            pageSize:10,
+            //rownumbers:true,//显示序号
+            collapsible:true,
+            data:{"total":"28","rows":[
+                {"itemid":"EST-1","productid":"FI-SW-01","listprice":"16.50","unitcost":"5.00","status":"P","attr1":"Large","operate":"1","button":"1"},
+                {"itemid":"EST-10","productid":"K9-DL-01","listprice":"18.50","unitcost":"17.00","status":"P","attr1":"Spotted Adult Female","operate":"10","button":"1"},
+                {"itemid":"EST-11","productid":"RP-SN-01","listprice":"18.50","unitcost":"55.00","status":"P","attr1":"Venomless","operate":"11","button":"1"},
+                {"itemid":"EST-12","productid":"RP-SN-01","listprice":"18.50","unitcost":"31.00","status":"P","attr1":"Rattleless","operate":"12","button":"1"},
+                {"itemid":"EST-13","productid":"RP-LI-02","listprice":"18.50","unitcost":"21.00","status":"P","attr1":"Green Adult","operate":"13","button":"1"},
+                {"itemid":"EST-14","productid":"FL-DSH-01","listprice":"58.50","unitcost":"68.00","status":"P","attr1":"Tailless","operate":"14","button":"1"},
+                {"itemid":"EST-15","productid":"FL-DSH-01","listprice":"23.50","unitcost":"66.00","status":"P","attr1":"With tail","operate":"15","button":"1"},
+                {"itemid":"EST-16","productid":"FL-DLH-02","listprice":"93.50","unitcost":"97.00","status":"P","attr1":"Adult Female","operate":"16","button":"1"},
+                {"itemid":"EST-17","productid":"FL-DLH-02","listprice":"93.50","unitcost":"48.00","status":"P","attr1":"Adult Male","operate":"17","button":"1"},
+                {"itemid":"EST-18","productid":"AV-CB-01","listprice":"193.50","unitcost":"92.00","status":"P","attr1":"Adult Male","operate":"18","button":"1"}
+            ]},
+            //url:'example/application/datagrid_data4.json',
+            onLoadSuccess:function(){
+                $('.operate').menubutton({
+                    plain:false,
+                    menu: '#operate_menu'
+                });
+                $('#operate_menu').menu({
+                    onClick:function(item){
+
+                        var a=$('.operate').menubutton("options");
+                        switch (item.name)
+                        {
+                            case "undo":
+                                alert("undo "+a.value);
+                                break;
+                            case "redo":
+                                alert("redo "+a.value);
+                                break;
+                            case "cut":
+                                alert("cut "+a.value);
+                                break;
+                            case "copy":
+                                alert("copy "+a.value);
+                                break;
+                            case "paste":
+                                alert("paste "+a.value);
+                                break;
+                            case "delete":
+                                alert("delete "+a.value);
+                                break;
+                        }
+                    }
+                });
+
+                $('.progressbar').progressbar({});
+
+                $('.switchbutton').switchbutton({
+                    height:23
+                });
+
+                $('.button-delete').linkbutton({
+                });
+                $('.button-edit').linkbutton({
+                });
+
+                $('.text').textbox({
+                    width:70,
+                    height:30
+                })
+
+
+
+                $('.operate-append,.operate-edit,.operate-delete').linkbutton({});
+                $('.operate-append').on('click', function(){
+                    var a=$(this).linkbutton("options");
+                    alert("append "+a.value);
+                });
+                $('.operate-edit').on('click', function(){
+                    var a=$(this).linkbutton("options");
+                    alert("edit "+a.value);
+                });
+                $('.operate-delete').on('click', function(){
+                    var a=$(this).linkbutton("options");
+                    alert("delete "+a.value);
+                });
+            }
+        });
+
+
+
+    })
+</script>
+<div id="operate_menu" style="width:150px;">
+    <div data-options="name:'undo'">Undo</div>
+    <div data-options="name:'redo'">Redo</div>
+    <div class="menu-sep"></div>
+    <div data-options="name:'cut'">Cut</div>
+    <div data-options="name:'copy'">Copy</div>
+    <div data-options="name:'paste'">Paste</div>
+    <div class="menu-sep"></div>
+    <div data-options="name:'delete'">Delete</div>
+    <div>Select All</div>
+</div>
