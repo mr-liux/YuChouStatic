@@ -41,7 +41,7 @@ $(function(){
         loadRight:function(){
             var indexObj = this;
             Tools.ajax({
-                url:Config.baseAdminPath+"/admin/system/right/myMenu",
+                url:Config.baseAdminPath+"/admin/system/right/myMenu?orderByClause=order&order=asc",
                 type:"get",
                 success:function(data){
                    var jsonData = data.data;
@@ -72,7 +72,11 @@ $(function(){
                     indexObj.set3LevelMenuStyle();
                     indexObj.set1LevleClick();
                     indexObj.initFirstMenuClick();
-                    Tools.href(initOpenUrl);
+                    //初次进入系统加载首页
+                    Q.init({
+                        key:'?',
+                        index:initOpenUrl
+                    });
                 }
             });
         },

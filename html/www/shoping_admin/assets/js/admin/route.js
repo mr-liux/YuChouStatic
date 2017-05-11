@@ -13,8 +13,5 @@ $(function () {
 
 
     Q.reg('admin_system_menu',function(){$('#page_center').window('refresh','system/menu/sys_menu.html');});
-    Q.init({
-        key:'?',
-       // index:initOpenUrl
-    });
+
 });
