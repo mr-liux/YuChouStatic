@@ -1,0 +1,168 @@
+<table id="table" style="" class="table-celled table-striped"
+       data-options="toolbar:'#tb',striped:true">
+    <thead>
+    <tr>
+        <th data-options="field:'',checkbox:true"></th>
+        <th data-options="field:'userKy',width:'35'">编号</th>
+        <th data-options="field:'userId',width:'60'">用户名</th>
+        <th data-options="field:'name',width:'70',align:'center'">姓名</th>
+        <th data-options="field:'companyName',width:'100',align:'center'">所属公司</th>
+        <th data-options="field:'orgName',width:'100',align:'center'">所属部门</th>
+        <th data-options="field:'jobName',width:'150',align:'center'">岗位</th>
+        <th data-options="field:'addTime',width:'130',align:'center'">创建时间</th>
+        <th data-options="field:'status',width:'60',align:'center',formatter:status">状态</th>
+        <th data-options="field:'button',width:'180',align:'left',formatter:button">操作</th>
+    </tr>
+    </thead>
+</table>
+<div id="tb" >
+
+    用户名: <input id="search_username" class="easyui-textbox" style="width:100px">
+    &nbsp;&nbsp;姓名: <input id="search_name" class="easyui-textbox" style="width:100px">
+    &nbsp;&nbsp;所属公司:
+    <select class="easyui-combobox" id="search_companyname" data-options="editable:false,valueField: 'companyKy',
+		textField:'name',panelHeight:'auto',loader:loadCompany" style="width:180px;">
+        <option value="-1">全部</option>
+    </select>
+    &nbsp;&nbsp;状态:
+    <select class="easyui-combobox" id="search_status" data-options="editable:false,panelHeight:'auto'"  style="width:80px;">
+        <option value="-1">全部</option>
+        <option value="1">正常</option>
+        <option value="0">删除</option>
+    </select>
+    <a href="javaScript:void(0);" class="easyui-linkbutton" id="btn_search" iconCls="icon-search">查询</a>
+
+    <div  style="float: right;">
+        <a href="javaScript:void(0);" class="easyui-linkbutton" id="btn_add" iconCls="icon-add" plain="false">添加</a>
+        <!--<a href="#" class="easyui-linkbutton " iconCls="icon-edit" plain="false">编辑</a>
+        <a href="#" class="easyui-linkbutton " iconCls="icon-save" plain="false">保存</a>
+        <a href="#" class="easyui-linkbutton " iconCls="icon-cut" plain="false">剪切</a>
+        <a href="#" class="easyui-linkbutton " iconCls="icon-remove" plain="false">删除</a>-->
+    </div>
+</div>
+
+<script  type="text/javascript">
+
+    function button(value,row,index){
+        if(row.status==1){
+            return "<a href='javascript:void(0);'  class='button-edit button-default'>编辑</a>    " +
+            "<a href='javascript:void(0);' class='button-delete button-danger'>删除</a> " +
+            "<a href='javascript:void(0);' class='button-right button-info'>设置权限</a>";
+        }else{
+            return "<a href='javascript:void(0);' class='button-recover button-success'>恢复</a>";
+        }
+
+    }
+    function status(value,row,index){
+        if(value==1){
+            return "<span class=\"icons icons-ok\"></span>正常";
+        }else{
+            return "<span class=\"icons icons-error\"></span><b>删除</b>";
+        }
+    }
+
+    function loadCompany(param,success,error){
+        Tools.ajax({
+            type: 'get',
+            url: Config.baseAdminPath+"/admin/system/company/list?pagesize=-1",
+            success: function (data) {
+                var tempData = [];
+                if(data&&data.success&&data.code==0){
+                    tempData=data.data;
+                }
+                tempData.splice(0,0,{"companyKy":"-1","name":"全部"});
+                success(tempData);
+            }
+        });
+    }
+
+    $(function(){
+        $("#btn_add").click(function(){
+           Tools.href("admin_system_user_add");
+        });
+
+
+        $("#btn_search").click(function(){
+            var search_username = $("#search_username").val();
+            var search_name = $("#search_name").val();
+            var search_companyname = $("#search_companyname").combobox("getValue");
+            var search_status = $("#search_status").val();
+            $('#table').datagrid('load',{
+                name :search_name,
+                userId :search_username,
+                status: (search_status ==-1?"":search_status),
+                companyKy : (search_companyname==-1?"":search_companyname)
+            });
+        });
+
+        Tools.loadTable({
+            id:'#table',
+            title:'用户信息列表',
+            url:'/admin/system/user/list',
+            params:{
+                "orderByClause":"user_ky",
+                "sort":"desc"
+            },
+            success:function(data){
+                //console.log(data);
+            },
+            onLoadSuccess:function () {
+                $('.button-delete').linkbutton({});
+                $('.button-edit').linkbutton({});
+                $('.button-right').linkbutton({});
+                $('.button-recover').linkbutton({});
+            }
+        });
+
+        /*$('#table').datagrid({
+            cls:"theme-datagrid",
+            title:"用户信息列表",
+            singleSelect:true,
+            width:'100%',
+            //showFooter:true,
+            method:"get",
+            cache:false,
+            pagination:true,
+            pageSize:Config.pagesize,
+            //rownumbers:true,//显示序号
+            collapsible:true,
+            url:Config.baseAdminPath+'/admin/system/user/list',
+            loader:function(param,success,error){
+                var that = $(this);
+                var opts = that.datagrid("options");
+                if (!opts.url) {
+                    return false;
+                }
+                Tools.ajax({
+                    type: opts.method,
+                    url: opts.url+"?cpage="+param.page+
+                    "&pagesize="+param.rows+
+                    "&orderByClause=user_ky&sort=desc" +
+                    "&name="+(typeof param.name=='undefined'?"":param.name)+
+                    "&userId="+(typeof param.username=='undefined'?"":param.username)+
+                    "&companyKy="+(typeof param.companyname=='undefined'?"":param.companyname)+
+                    "&status="+(typeof param.status=='undefined'?"":param.status),
+                    success: function (data) {
+                        var temp = {};
+                        temp.rows=[];
+                        temp.total=0;
+                        if(data&&data.success&&data.code==0){
+                            temp.rows=data.data;
+                            temp.total=data.ext.pageInfo.totalCount;
+
+                        }
+                        success(temp);
+                    }
+                });
+            },
+            onLoadSuccess:function(){
+                $('.button-delete').linkbutton({});
+                $('.button-edit').linkbutton({});
+                $('.button-right').linkbutton({});
+                $('.button-recover').linkbutton({});
+
+            }
+        });*/
+
+    })
+</script>
