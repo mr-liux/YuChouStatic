@@ -12,4 +12,20 @@ CREATE TABLE `sys_user_menu_log` (
 ) ENGINE=InnoDB AUTO_INCREMENT=12 DEFAULT CHARSET=utf8 COMMENT='用户对菜单权限分配日志表';
 
 
+ INSERT INTO `sys_menu` (`pid`, `htmlUrl`, `url`, `name`, `request`, `attribute`, `add_time`) VALUES 
+ ('2', 'admin_content_insert', '/admin/content/insert', '内容添加', 'POST', '2', '2017-05-13 14:41:33')
+ INSERT INTO `sys_menu` (`pid`, `htmlUrl`, `url`, `name`, `request`, `attribute`, `add_time`) VALUES 
+ ('2', 'admin_content_pagelist_get', '/admin/content/pagelist', '内容列表', 'POST', '2', '2017-05-13 14:41:33')
+ INSERT INTO `sys_menu` (`pid`, `htmlUrl`, `url`, `name`, `request`, `attribute`, `add_time`) VALUES 
+ ('2', 'admin_content_update_put', '/admin/content/update', '内容修改', 'POST', '2', '2017-05-13 14:41:33')
  
+ INSERT INTO `sys_menu` (`pid`, `htmlUrl`, `url`, `name`, `request`, `attribute`, `add_time`) VALUES 
+ ('2', '', '/admin/adLocation/list', '查询广告位置集合信息', 'POST', '2', '2017-05-13 14:41:33');
+ INSERT INTO `sys_menu` (`pid`, `htmlUrl`, `url`, `name`, `request`, `attribute`, `add_time`) VALUES 
+ ('2', '', '/admin/adLocation/update', '修改广告位置信息', 'POST', '2', '2017-05-13 14:41:33');
+ 
+ 
+ #菜单URL表 添加字段  --2017/05/13 16:40
+ ALTER TABLE `sys_menu`
+ADD COLUMN `type`  int(1) NOT NULL DEFAULT 0 COMMENT '菜单共用标识（0私有资源，1公共资源）' AFTER `attribute`;
+
